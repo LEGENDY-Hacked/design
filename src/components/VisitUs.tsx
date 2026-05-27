@@ -21,7 +21,18 @@ function ReservationForm() {
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
-    setTimeout(() => setSubmitted(false), 4000);
+
+    // Send reservation details to owner via WhatsApp
+    const msg =
+      `🍽️ *Neue Tischreservierung*\n\n` +
+      `👤 Name: ${form.name}\n` +
+      `👥 Personen: ${form.party}\n` +
+      `📅 Datum: ${form.date}\n` +
+      `🕐 Uhrzeit: ${form.time}\n` +
+      `📞 Telefon: ${form.phone || "–"}`;
+
+    const waUrl = `https://wa.me/4917682054220?text=${encodeURIComponent(msg)}`;
+    window.open(waUrl, "_blank");
   };
 
   const fieldStyle: CSSProperties = {
@@ -72,7 +83,7 @@ function ReservationForm() {
             color: "var(--ash-300)",
           }}
         >
-          Wir bestätigen per SMS unter {form.phone || "deiner Nummer"}.
+          WhatsApp wurde geöffnet — tippe auf Senden, um die Reservierung abzuschicken.
         </p>
       </div>
     );
