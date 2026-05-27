@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Lezzet-i Mangal — Wo Feuer auf Tradition trifft · Marburg</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Authentischer türkischer Holzkohlegrill, nur wenige Schritte vom Marburger Hauptbahnhof. Täglich 9:00–24:00 geöffnet. Tisch reservieren oder anrufen unter 06421 9338996.">
+
+<link rel="icon" type="image/png" href="design-system/assets/logos/brand-monogram.png">
+<link rel="stylesheet" href="design-system/colors_and_type.css">
+
+<style>
+  html, body { background: var(--charcoal-900); }
+  body { overflow-x: hidden; }
+  a { color: inherit; }
+
+  /* Scroll-reveal */
+  .reveal { opacity: 0; transform: translateY(28px); transition: opacity 900ms var(--ease-cinema), transform 900ms var(--ease-cinema); }
+  .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; transform: none; transition: none; }
+  }
+
+  /* Selection */
+  ::selection { background: var(--ember-500); color: var(--cream-50); }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--charcoal-900); }
+  ::-webkit-scrollbar-thumb { background: var(--charcoal-700); border: 2px solid var(--charcoal-900); border-radius: 5px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--brass-600); }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+
+<!-- Data -->
+<script src="site/data/menu.js"></script>
+<script src="site/data/reviews.js"></script>
+
+<!-- Components -->
+<script type="text/babel" src="site/components/primitives.jsx"></script>
+<script type="text/babel" src="site/components/Nav.jsx"></script>
+<script type="text/babel" src="site/components/Hero.jsx"></script>
+<script type="text/babel" src="site/components/SocialProofStrip.jsx"></script>
+<script type="text/babel" src="site/components/Story.jsx"></script>
+<script type="text/babel" src="site/components/ImageStrip.jsx"></script>
+<script type="text/babel" src="site/components/SignatureDishes.jsx"></script>
+<script type="text/babel" src="site/components/BreakfastSection.jsx"></script>
+<script type="text/babel" src="site/components/OnTheGo.jsx"></script>
+<script type="text/babel" src="site/components/ValueHospitality.jsx"></script>
+<script type="text/babel" src="site/components/ReviewsWall.jsx"></script>
+<script type="text/babel" src="site/components/VisitUs.jsx"></script>
+<script type="text/babel" src="site/components/TableAwaits.jsx"></script>
+<script type="text/babel" src="site/components/Footer.jsx"></script>
+<script type="text/babel" src="site/components/FloatingCallButton.jsx"></script>
+
+<script type="text/babel">
+function App() {
+  const scrollToVisit = () => {
+    document.getElementById("visit")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+  const scrollToMenu = () => {
+    document.getElementById("dishes")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  React.useEffect(() => {
+    const els = [...document.querySelectorAll('[data-reveal]')];
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      els.forEach(el => el.classList.add('in'));
+      return;
+    }
+    let revealedAny = false;
+    let io;
+    try {
+      io = new IntersectionObserver((entries) => {
+        entries.forEach((e) => {
+          if (e.isIntersecting) {
+            revealedAny = true;
+            e.target.classList.add('in');
+            io.unobserve(e.target);
+          }
+        });
+      }, { rootMargin: "0px 0px -8% 0px", threshold: 0.01 });
+      els.forEach(el => io.observe(el));
+    } catch (e) { /* no IO */ }
+
+    const fallback = setTimeout(() => {
+      if (!revealedAny) {
+        els.forEach(el => el.classList.add('in'));
+      }
+    }, 1200);
+
+    return () => { io?.disconnect(); clearTimeout(fallback); };
+  }, []);
+
+  return (
+    <div id="top">
+      <Nav onReserve={scrollToVisit} />
+      <Hero onReserve={scrollToVisit} onMenu={scrollToMenu} />
+      <div data-reveal className="reveal"><SocialProofStrip /></div>
+      <div data-reveal className="reveal"><Story /></div>
+      <div data-reveal className="reveal"><ImageStrip /></div>
+      <div data-reveal className="reveal"><SignatureDishes onReserve={scrollToVisit} /></div>
+      <div data-reveal className="reveal"><BreakfastSection onReserve={scrollToVisit} /></div>
+      <div data-reveal className="reveal"><OnTheGo /></div>
+      <div data-reveal className="reveal"><ValueHospitality /></div>
+      <div data-reveal className="reveal"><ReviewsWall /></div>
+      <div data-reveal className="reveal"><VisitUs /></div>
+      <div data-reveal className="reveal"><TableAwaits onReserve={scrollToVisit} /></div>
+      <Footer />
+      <FloatingCallButton />
+    </div>
+  );
+}
+
+const tryMount = () => {
+  if (!window.Hero || !window.Footer || !window.VisitUs || !window.SignatureDishes || !window.ImageStrip || !window.TableAwaits) {
+    return setTimeout(tryMount, 60);
+  }
+  ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+};
+tryMount();
+</script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="120" height="120" role="img" aria-label="LM monogram">
+  <rect width="120" height="120" fill="#0E0B0A"></rect>
+  <circle cx="60" cy="60" r="52" fill="none" stroke="#C9A961" stroke-width="1"></circle>
+  <text x="60" y="78" text-anchor="middle" font-family="&#39;Bodoni Moda&#39;, &#39;Didot&#39;, serif" font-size="56" font-weight="500" letter-spacing="-0.03em" fill="#F5EDE0">L<tspan fill="#E25822" font-style="italic">M</tspan></text>
+</svg>
